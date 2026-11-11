@@ -1,0 +1,31 @@
+# Patient images and data stay in the team Drive folder
+data/
+via_data/
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.bmp
+*.xlsx
+*.xls
+*.zip
+
+# Models and results
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.onnx
+*.tflite
+results/
+checkpoints/
+
+# Python / notebooks
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv*/
+.env
+
+# OS
+.DS_Store
