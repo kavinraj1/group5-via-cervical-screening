@@ -25,7 +25,7 @@ A phone app that works offline in low-resource clinics. A health worker takes a 
 
 | Path | What |
 |---|---|
-| `notebooks/Group5_VIA_Team_Notebook.ipynb` | Shared starter notebook: mounts Drive, copies the data to the runtime, loads the IARC labels |
+| `notebooks/Group5_VIA_Team_Notebook.ipynb` | Shared team notebook: data setup from the *Finalized Dataset* folder, then B3 pruning, distillation and bigger-model experiments (5-fold CV) |
 | `notebooks/VIA_Accuracy_Target_preliminary.ipynb` | Kavin's preliminary experiments (EfficientNet-B0, MobileNetV3, 5-fold CV) |
 | `src/via_data.py` | Loads the IARC + Jhpiego images into one labelled table |
 | `labels/jhpiego_labels.csv` | VIA labels for the 115 Jhpiego flashcards |
@@ -66,3 +66,18 @@ Keep each pull request to one thing (one experiment or one fix) and use short co
 | Average of the two | 0.862 | 0.61 | 0.733 |
 
 None of these meet the target yet; the move to EfficientNet-B3 is meant to close that gap.
+
+## Results so far (Nov 11, 300 images, 5-fold CV)
+
+| Model | Params | AUC | Sensitivity at 86.7% specificity | 3-class accuracy |
+|---|---|---|---|---|
+| EfficientNet-B3 | 10.7M | 0.879–0.885 | 0.69–0.73 | 0.750–0.763 |
+| B3 pruned 20% (uniform) | 6.7M | 0.796 | 0.49 | 0.673 |
+| MobileNetV3-L distilled from B3 | 4.2M | 0.858 | 0.68 | 0.730 |
+| EfficientNet-B4 | 17.6M | 0.852 | 0.69 | 0.733 |
+| EfficientNetV2-S | 20.2M | 0.874 | 0.72 | 0.767 |
+| **Average of B3 + V2-S** | 30.9M | **0.899** | **0.74** | **0.770** |
+
+- Pruning B3 loses accuracy at every level, and bigger single models don't beat B3 on 300 images.
+- Averaging B3 and V2-S meets the target and fits a 4 GB phone (~62 MB at float16, roughly 3–8 s per photo). Next: distil it into a single B3 and compare.
+- B3 ranges come from separate runs of the same recipe; differences of ~0.02 AUC or a few points of sensitivity are within run-to-run noise.
